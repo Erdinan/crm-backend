@@ -1,0 +1,34 @@
+{
+  "name": "crm_project",
+  "version": "1.0.0",
+  "description": "CRM - IT Project",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publishToHeroku": "cd ../ && git subtree push --prefix CRM_Backend heroku-developer-crm-backend master || true"
+  },
+  "author": "DEVEL-opers",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-flash-plus": "^0.2.1",
+    "connect-mongo": "^4.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "express-jwt": "^6.1.0",
+    "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "mongoose": "^5.13.7",
+    "node-schedule": "^2.0.0",
+    "nodemailer": "^6.6.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "nodemon": "^2.0.13"
+  },
+  "devDependencies": {}
+}

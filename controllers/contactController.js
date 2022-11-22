@@ -10,7 +10,6 @@ const objectId = require('mongodb').ObjectID;
 // get all contacts
 const getAllContacts = async (req, res) => {
     try {
-        console.log(req.session.userId);
         const contacts = await Contact.find({'userId': req.session.userId}).lean();
         // const contacts = await Contact.find({'userId': objectId('6123be502afc875770f07ef9')}).lean();
         return res.send(contacts);
@@ -37,14 +36,12 @@ const getOneContact = async (req, res) => {
 
 const getOneProfile = async (req, res) => {
     try {
-        console.log(req.body)
         const oneContact = await User.findById({"_id": req.session.userId}).lean();
         // const oneContact = await User.findById({"_id": objectId('6123be502afc875770f07ef9')}).lean();
         if (oneContact === null) {  // no contact found in database
             res.status(404);
             return res.send("Contact not found");
         }
-        console.log(oneContact)
         return res.send(oneContact);
     } catch (err) { // error occured
         res.status(400);

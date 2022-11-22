@@ -1,23 +1,21 @@
 const express = require('express')
 const app = express()
 var exphbs = require('express-handlebars');
-const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const path = require('path');
 const http = require('http');
 const passport = require("./passport/setup.js");
 const flash = require('connect-flash-plus');
 const session = require("express-session");
-const jwt = require('jsonwebtoken');
 const MongoDBStore = require("connect-mongo");
 const schedule = require('node-schedule');
-const db = "mongodb+srv://user:P%40ssw0rd!@cluster0.lzade.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const db = "mongodb+srv://Erdinan:Angkajaya123@crm-project.79vnwjs.mongodb.net/?retryWrites=true&w=majority";
 const dboptions = {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
-    dbName: "PersonalCRM"
+    dbName: "CRM-Project"
   };
 const cors = require('cors');
 
@@ -45,7 +43,7 @@ app.engine('hbs', exphbs({
 app.use(express.json())
 app.use(cors({
   credentials: true,
-  origin: "https://developer-crm-frontend.herokuapp.com",
+  origin: "http://localhost:3000",
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 
@@ -53,13 +51,13 @@ app.set("trust proxy", 1);
 app.use(session({
   secret: "testttt",
   resave: false,
-  saveUnitialized: false,
+  saveUnitialized: true,
   expires: new Date(Date.now() + (1)),
   cookie: { secure: true,
             sameSite: 'none',
             httpOnly: false } ,
   store: MongoDBStore.create({mongoUrl: db,
-                              dbName: 'PersonalCRM',
+                              dbName: 'CRM-Project',
                               autoRemove: 'native'})
 }));
 
@@ -95,13 +93,7 @@ app.use('/', loginRouter)
 app.use('/notify', notificationRouter)
 
 app.listen(port, () => {
-    console.log(`The personal CRM app is listening on port ${port}!`)
-})
-
-// handler for GET home page
-app.get('/', (req, res) => {
-    res.render('login')
-    //res.send('<h1>Personal CRM</h1>')
+  console.log(`The personal CRM app is listening on port ${port}!`)
 })
 
 //Schedule the email notification for events

@@ -3,12 +3,10 @@ const app = express()
 var exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const path = require('path');
-const http = require('http');
 const passport = require("./passport/setup.js");
 const flash = require('connect-flash-plus');
 const session = require("express-session");
 const MongoDBStore = require("connect-mongo");
-const schedule = require('node-schedule');
 const db = "mongodb+srv://Erdinan:Angkajaya123@crm-project.79vnwjs.mongodb.net/?retryWrites=true&w=majority";
 const dboptions = {
     useNewUrlParser: true,
@@ -29,17 +27,6 @@ mongoose.connect(db, dboptions).then(
     }
   );
 
-  // setting up views
-app.engine('hbs', exphbs({
-    defaultlayout: 'main',
-    extname: 'hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts'),
-    partialsDir: [
-      //  path to your partials
-      path.join(__dirname, 'views/partials/'),
-    ]
-  }))
-
 app.use(express.json())
 app.use(cors({
   credentials: true,
@@ -49,9 +36,9 @@ app.use(cors({
 
 app.set("trust proxy", 1);
 app.use(session({
-  secret: "testttt",
   resave: false,
-  saveUnitialized: true,
+  saveUnitialized: false,
+  secret: "testttt",
   expires: new Date(Date.now() + (1)),
   cookie: { secure: true,
             sameSite: 'none',
@@ -65,8 +52,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(express.urlencoded({extended: true}));
-app.set('view engine', 'hbs');
-app.engine('handlebars', exphbs());
 app.use(express.static(path.join(__dirname, '/public')));
 
 // setting trust proxy
@@ -80,7 +65,8 @@ const contactRouter = require('./routes/contactRouter');
 const eventRouter = require('./routes/eventRouter');
 const departmentRouter = require('./routes/departmentRouter');
 const organisationRouter = require('./routes/organisationRouter');
-const loginRouter = require('./routes/loginRouter'); 
+const loginRouter = require('./routes/loginRouter');
+const profileRouter = require('./routes/profileRouter');
 const notificationRouter = require('./routes/notificationRouter');
 
 // handle requests
@@ -90,15 +76,11 @@ app.use('/event', eventRouter)
 app.use('/department', departmentRouter)
 app.use('/organisation', organisationRouter)
 app.use('/', loginRouter)
+app.use('/profile', profileRouter)
 app.use('/notify', notificationRouter)
 
 app.listen(port, () => {
   console.log(`The personal CRM app is listening on port ${port}!`)
 })
-
-//Schedule the email notification for events
-const notificationController = require('./controllers/notificationController');
-const job = schedule.scheduleJob('*/10 * * * * *', notificationController.periodicCheck);
-
 
 module.exports = app

@@ -65,30 +65,28 @@ passport.use(
     },
 
     async function (req, email, password, done) {
-      // process.nextTick(async function () {
-        await User.findOne({ email: email }, function (err, user) {
-          if (err) {
-            return done(err);
+      await User.findOne({ email: email }, function (err, user) {
+        if (err) {
+          return done(err);
+        } else {
+          if (user.validPassword(password)) {
+            req.session.email = email;
+            req.session.userId = user.id;
+            return done(
+              null,
+              user,
+              req.flash("loginMessage", "Login succesful")
+            );
           } else {
-            if (user.validPassword(password)) {
-              req.session.email = email;
-              req.session.userId = user.id;
-              return done(
-                null,
-                user,
-                req.flash("loginMessage", "Login succesful")
-              );
-            } else {
-              return done(
-                null,
-                false,
-                req.flash("loginMessage", "Wrong email or password!")
-              );
-            }
+            return done(
+              null,
+              false,
+              req.flash("loginMessage", "Wrong email or password!")
+            );
           }
-        });
-      // });
-    }
+        }
+      });
+    } 
   )
 );
 

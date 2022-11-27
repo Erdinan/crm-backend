@@ -1,8 +1,6 @@
 var express = require("express");
 const router = express.Router();
 const passport = require("passport");
-var authController = require("../controllers/authController");
-var contactController = require("../controllers/contactController");
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("customer-login", (err, user, info) => {
@@ -16,8 +14,6 @@ router.post("/login", (req, res, next) => {
     }
   })(req, res, next);
 });
-
-router.get("/profile", (req, res) => contactController.getOneProfile(req, res));
 
 router.post("/register", (req, res, next) => {
   passport.authenticate("customer-signup", (err, user, info) => {
@@ -35,12 +31,7 @@ router.post("/register", (req, res, next) => {
 router.post("/logout", function (req, res) {
   req.logout();
   req.session.destroy();
-  // req.flash('');
   res.send("succesfully logout");
 });
-
-router.post("/profile/updatepassword", (req, res) =>
-  authController.updatePassword(req, res)
-);
 
 module.exports = router;
